@@ -68,17 +68,18 @@ func (client *Client) GenerateSecret(durationSecond int64) (string, error) {
 	return token.SignedString(client.PrivateKey)
 }
 
-func (client *Client) ValidateToken(token string) error {
+func (client *Client) ValidateCode(code string) (*ValidateResponse, error) {
 
 	secret, err := client.GenerateSecret(300)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	data := url.Values{}
 	data.Set("client_id", client.ServiceID)
 	data.Set("client_secret", secret)
-	data.Set("code", token)
+	data.Set("code", code)
+
 	//data.Set("redirect_uri", "https://newcontinent-team.com/apple/signin")
 
 	data.Set("grant_type", "authorization_code")
@@ -87,7 +88,7 @@ func (client *Client) ValidateToken(token string) error {
 	req, err := http.NewRequestWithContext(context.Background(), "POST", url, strings.NewReader(data.Encode()))
 	if err != nil {
 
-		return err
+		return nil, err
 	}
 
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
@@ -97,23 +98,24 @@ func (client *Client) ValidateToken(token string) error {
 	httpClient := &http.Client{}
 	res, err := httpClient.Do(req)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	defer res.Body.Close()
 	resdata, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	validateResponse := &ValidateResponse{}
 	err = json.Unmarshal(resdata, res)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	if validateResponse.Error != "" {
 
-		return errors.New(validateResponse.Error)
+		return validateResponse, errors.New(validateResponse.Error)
 	}
-	return nil
+
+	return validateResponse, nil
 }
