@@ -1,4 +1,4 @@
-module goauth
+module github.com/tapvanvn/goauth
 
 go 1.17
 

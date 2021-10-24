@@ -4,10 +4,11 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"goauth/apple"
 	"io/ioutil"
 	"log"
 	"os"
+
+	"github.com/tapvanvn/goauth/apple"
 )
 
 type Config struct {
