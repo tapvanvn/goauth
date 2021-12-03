@@ -14,3 +14,7 @@ const (
 type AccountID string
 type SessionID string
 type SessionAdapt interface{}
+
+type Document interface {
+	GetHash() []byte
+}

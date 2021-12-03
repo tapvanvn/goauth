@@ -5,6 +5,7 @@ go 1.17
 require (
 	github.com/ethereum/go-ethereum v1.10.13
 	github.com/golang-jwt/jwt v3.2.2+incompatible
+	github.com/miguelmota/go-solidity-sha3 v0.1.1
 )
 
 require (
