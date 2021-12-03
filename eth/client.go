@@ -41,7 +41,7 @@ func (client *Client) GetClientType() goauth.ClientType {
 func (client *Client) BeginSession(clientID goauth.AccountID, adapter goauth.IAdapter) (goauth.ISession, error) {
 	sessionID := adapter.NewSessionID()
 
-	return NewSession(sessionID), nil
+	return NewSession(sessionID, string(clientID)), nil
 }
 func (client *Client) Verify(session goauth.ISession, adapter goauth.IAdapter) (bool, error) {
 	return false, nil
