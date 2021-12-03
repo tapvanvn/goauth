@@ -49,7 +49,7 @@ type OwnerClient struct {
 
 func (client *OwnerClient) GetSignature(message []byte) ([]byte, error) {
 
-	return crypto.Sign(message, client.privateKey)
+	return crypto.Sign(crypto.Keccak256(message), client.privateKey)
 }
 
 func (client *OwnerClient) VerifySignature(message []byte, signature []byte) (bool, error) {
