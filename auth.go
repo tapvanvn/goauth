@@ -1,5 +1,7 @@
 package goauth
 
+import "fmt"
+
 func NewAuth(adapter IAdapter) *Auth {
 	return &Auth{
 		adapter: adapter,
@@ -25,10 +27,12 @@ func (auth *Auth) UnregClient(clientType ClientType) {
 //start a session
 func (auth *Auth) BeginSession(clientType ClientType, clientAccountID AccountID) (ISession, error) {
 
+	fmt.Println("--1")
 	if client, ok := auth.clients[clientType]; ok {
-
+		fmt.Println("--2")
 		return client.BeginSession(clientAccountID, auth.adapter)
 	}
+	fmt.Println("--3")
 	return nil, ErrClientNotFound
 }
 

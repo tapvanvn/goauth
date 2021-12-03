@@ -2,12 +2,13 @@ package eth
 
 import "github.com/tapvanvn/goauth"
 
-func NewSession(sessionID goauth.SessionID) *EthSession {
+func NewSession(sessionID goauth.SessionID, address string) *EthSession {
 
 	return &EthSession{
 
 		sessionID: sessionID,
 		state:     goauth.SessionStateInit,
+		address:   address,
 	}
 }
 
