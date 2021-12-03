@@ -86,3 +86,11 @@ func (client *OwnerClient) Verify(session goauth.ISession, adapter goauth.IAdapt
 func (client *OwnerClient) GetResponse() goauth.IResponse {
 	return &Response{}
 }
+
+func (client *OwnerClient) GetBareResponse() goauth.IResponse {
+	return &Response{}
+}
+
+func (client *OwnerClient) GetBareSession() goauth.ISession {
+	return &EthSession{}
+}
