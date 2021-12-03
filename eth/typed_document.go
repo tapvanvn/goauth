@@ -13,6 +13,12 @@ type TypedParameter struct {
 	Value string
 }
 
+func NewTypedDocument() *TypedDocument {
+	return &TypedDocument{
+		Parameters: make([]*TypedParameter, 0),
+	}
+}
+
 type TypedDocument struct {
 	Parameters []*TypedParameter
 }

@@ -34,13 +34,18 @@ func (auth *Auth) BeginSession(clientType ClientType, clientAccountID AccountID)
 }
 
 //when frontend process and send infomation for verifying account.
-func (auth *Auth) VerifySession(session ISession, response IResponse) (bool, error) {
-
-	clientType := session.GetClientType()
+func (auth *Auth) VerifySession(clientType ClientType, sessionMeta map[string]interface{}, responseMeta map[string]interface{}) (bool, error) {
 
 	if client, ok := auth.clients[clientType]; ok {
-
-		return client.Verify(session, auth.adapter)
+		response, err := client.ParseResponse(responseMeta)
+		if err != nil {
+			return false, err
+		}
+		session, err := client.ParseSession(sessionMeta)
+		if err != nil {
+			return false, err
+		}
+		return client.Verify(session, response, auth.adapter)
 	}
 	return false, nil
 }

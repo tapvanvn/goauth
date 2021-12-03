@@ -3,8 +3,10 @@ package eth
 import (
 	"crypto/ecdsa"
 	"errors"
+	"fmt"
 	"strings"
 
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/tapvanvn/goauth"
@@ -51,9 +53,55 @@ func (client *OwnerClient) GetSignature(message []byte) ([]byte, error) {
 	return crypto.Sign(crypto.Keccak256(message), client.privateKey)
 }
 
-func (client *OwnerClient) VerifySignature(message []byte, signature []byte) (bool, error) {
+func (client *OwnerClient) VerifyMessageSignature(message []byte, signature []byte) (bool, error) {
 
-	return false, goauth.ErrNotImplement
+	hash := crypto.Keccak256(message)
+
+	if signature[64] != 27 && signature[64] != 28 {
+
+		return false, goauth.ErrInvalidSignature
+	}
+	signature[64] -= 27
+
+	pubKey, err := crypto.SigToPub(hash, signature)
+
+	if err != nil {
+
+		return false, err
+	}
+	recoveredAddr := crypto.PubkeyToAddress(*pubKey).Hex()
+
+	return client.address == recoveredAddr, nil
+}
+
+func (client *OwnerClient) VerifySignature(address string, verifyMessage string, verifySignature []byte) (bool, error) {
+
+	fromAddr := common.HexToAddress(address)
+
+	doc := NewTypedDocument()
+	doc.Parameters = append(doc.Parameters, &TypedParameter{
+		Type:  "string",
+		Name:  "Message",
+		Value: verifyMessage,
+	})
+
+	if verifySignature[64] != 27 && verifySignature[64] != 28 {
+
+		return false, goauth.ErrInvalidSignature
+	}
+	verifySignature[64] -= 27
+
+	hash := doc.GetHash()
+
+	pubKey, err := crypto.SigToPub(hash, verifySignature)
+
+	if err != nil {
+
+		return false, err
+	}
+	recoveredAddr := crypto.PubkeyToAddress(*pubKey).Hex()
+
+	return fromAddr.Hex() == recoveredAddr, nil
 }
 
 func (client *OwnerClient) GetClientType() goauth.ClientType {
@@ -66,6 +114,7 @@ func (client *OwnerClient) BeginSession(clientID goauth.AccountID, adapter goaut
 	sessionID := adapter.NewSessionID()
 
 	session := NewSession(sessionID, string(clientID))
+
 	verifyMessage, err := client.GetSignature([]byte(sessionID))
 
 	if err != nil {
@@ -76,11 +125,33 @@ func (client *OwnerClient) BeginSession(clientID goauth.AccountID, adapter goaut
 
 	return session, nil
 }
-func (client *OwnerClient) Verify(session goauth.ISession, adapter goauth.IAdapter) (bool, error) {
+func (client *OwnerClient) Verify(session goauth.ISession, response goauth.IResponse, adapter goauth.IAdapter) (bool, error) {
 
 	ethSession := session.(*EthSession)
-	_ = ethSession
-	return false, nil
+	ethResponse := response.(*Response)
+
+	if ethSession == nil || ethResponse == nil {
+
+		return false, goauth.ErrInvalidInfomation
+	}
+	fmt.Println("step 1")
+	message := crypto.Keccak256([]byte(ethSession.SessionID))
+
+	signature, err := hexutil.Decode(ethSession.VerifyMessage)
+	if err != nil {
+		return false, err
+	}
+	fmt.Println("step 2")
+	success, err := client.VerifyMessageSignature(message, signature)
+
+	if !success || err != nil {
+
+		return false, err
+	}
+	fmt.Println("step 3")
+	verifySignature, err := hexutil.Decode(ethResponse.Signature)
+	fmt.Println("step 3")
+	return client.VerifySignature(ethSession.Address, ethSession.VerifyMessage, verifySignature)
 }
 
 func (client *OwnerClient) ParseResponse(meta map[string]interface{}) (goauth.IResponse, error) {
@@ -137,6 +208,18 @@ func (client *OwnerClient) ParseSession(meta map[string]interface{}) (goauth.ISe
 	}
 
 	session.Address = address
+
+	infVerifyMessage, ok := meta["VerifyMessage"]
+	if !ok {
+		return nil, goauth.ErrInvalidInfomation
+	}
+
+	verifyMessage, ok := infVerifyMessage.(string)
+	if !ok {
+		return nil, goauth.ErrInvalidInfomation
+	}
+
+	session.VerifyMessage = verifyMessage
 
 	return session, nil
 }
