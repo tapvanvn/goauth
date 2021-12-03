@@ -6,28 +6,28 @@ func NewSession(sessionID goauth.SessionID, address string) *EthSession {
 
 	return &EthSession{
 
-		sessionID: sessionID,
-		state:     goauth.SessionStateInit,
-		address:   address,
+		SessionID: sessionID,
+		State:     goauth.SessionStateInit,
+		Address:   address,
 	}
 }
 
 type EthSession struct {
-	sessionID     goauth.SessionID
-	state         goauth.SessionState
-	address       string
-	verifyMessage string
+	SessionID     goauth.SessionID
+	State         goauth.SessionState
+	Address       string
+	VerifyMessage string
 }
 
 func (session *EthSession) GetSessionID() goauth.SessionID {
-	return session.sessionID
+	return session.SessionID
 }
 func (session *EthSession) GetClientAccountID() goauth.AccountID {
-	return goauth.AccountID(session.address)
+	return goauth.AccountID(session.Address)
 }
 func (session *EthSession) GetClientType() goauth.ClientType {
 	return goauth.ClientTypeEthereum
 }
 func (session *EthSession) GetState() goauth.SessionState {
-	return session.state
+	return session.State
 }
