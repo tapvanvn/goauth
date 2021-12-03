@@ -129,7 +129,7 @@ func (client *OwnerClient) Verify(session goauth.ISession, response goauth.IResp
 
 	ethSession := session.(*EthSession)
 	ethResponse := response.(*Response)
-
+	fmt.Println("step 0")
 	if ethSession == nil || ethResponse == nil {
 
 		return false, goauth.ErrInvalidInfomation

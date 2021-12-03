@@ -47,5 +47,5 @@ func (auth *Auth) VerifySession(clientType ClientType, sessionMeta map[string]in
 		}
 		return client.Verify(session, response, auth.adapter)
 	}
-	return false, nil
+	return false, ErrClientNotFound
 }
