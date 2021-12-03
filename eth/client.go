@@ -44,5 +44,5 @@ func (client *Client) BeginSession(clientID goauth.AccountID, adapter goauth.IAd
 	return NewSession(sessionID), nil
 }
 func (client *Client) Verify(session goauth.ISession, adapter goauth.IAdapter) (bool, error) {
-
+	return false, nil
 }
