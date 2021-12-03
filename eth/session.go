@@ -13,10 +13,10 @@ func NewSession(sessionID goauth.SessionID, address string) *EthSession {
 }
 
 type EthSession struct {
-	SessionID     goauth.SessionID
-	State         goauth.SessionState
-	Address       string
-	VerifyMessage string
+	SessionID     goauth.SessionID    `json:"SessionID"`
+	State         goauth.SessionState `json:"State"`
+	Address       string              `json:"Address"`
+	VerifyMessage string              `json:"VerifyMessage"`
 }
 
 func (session *EthSession) GetSessionID() goauth.SessionID {

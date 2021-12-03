@@ -83,14 +83,60 @@ func (client *OwnerClient) Verify(session goauth.ISession, adapter goauth.IAdapt
 	return false, nil
 }
 
-func (client *OwnerClient) GetResponse() goauth.IResponse {
-	return &Response{}
+func (client *OwnerClient) ParseResponse(meta map[string]interface{}) (goauth.IResponse, error) {
+
+	res := &Response{}
+	infSignature, ok := meta["Signature"]
+	if !ok {
+		return nil, goauth.ErrInvalidInfomation
+	}
+	signature, ok := infSignature.(string)
+	if !ok {
+		return nil, goauth.ErrInvalidInfomation
+	}
+	res.Signature = signature
+	return res, nil
 }
 
-func (client *OwnerClient) GetBareResponse() goauth.IResponse {
-	return &Response{}
-}
+func (client *OwnerClient) ParseSession(meta map[string]interface{}) (goauth.ISession, error) {
 
-func (client *OwnerClient) GetBareSession() goauth.ISession {
-	return &EthSession{}
+	session := &EthSession{}
+
+	infSessionID, ok := meta["SessionID"]
+	if !ok {
+		return nil, goauth.ErrInvalidInfomation
+	}
+
+	sessionID, ok := infSessionID.(string)
+	if !ok {
+		return nil, goauth.ErrInvalidInfomation
+	}
+
+	session.SessionID = goauth.SessionID(sessionID)
+
+	infState, ok := meta["State"]
+	if !ok {
+		return nil, goauth.ErrInvalidInfomation
+	}
+
+	state, ok := infState.(goauth.SessionState)
+	if !ok {
+		return nil, goauth.ErrInvalidInfomation
+	}
+
+	session.State = state
+
+	infAddress, ok := meta["Address"]
+	if !ok {
+		return nil, goauth.ErrInvalidInfomation
+	}
+
+	address, ok := infAddress.(string)
+	if !ok {
+		return nil, goauth.ErrInvalidInfomation
+	}
+
+	session.Address = address
+
+	return session, nil
 }
