@@ -193,11 +193,11 @@ func (client *OwnerClient) ParseSession(meta map[string]interface{}) (goauth.ISe
 		return nil, goauth.ErrInvalidInfomation
 	}
 
-	state, ok := infState.(int)
-	if !ok {
+	state := infState.(int)
+	/*if !ok {
 		fmt.Println("fail on parse state2")
 		return nil, goauth.ErrInvalidInfomation
-	}
+	}*/
 
 	session.State = goauth.SessionState(state)
 
