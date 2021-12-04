@@ -136,7 +136,7 @@ func (client *OwnerClient) Verify(session goauth.ISession, response goauth.IResp
 		return false, goauth.ErrInvalidInfomation
 	}
 	fmt.Println("step 1")
-	message := crypto.Keccak256([]byte(ethSession.SessionID))
+	message := []byte(ethSession.SessionID)
 
 	signature, err := hexutil.Decode(ethSession.VerifyMessage)
 	if err != nil {
@@ -176,13 +176,11 @@ func (client *OwnerClient) ParseSession(meta map[string]interface{}) (goauth.ISe
 
 	infSessionID, ok := meta["SessionID"]
 	if !ok {
-		fmt.Println("fail on parse sessionID")
 		return nil, goauth.ErrInvalidInfomation
 	}
 
 	sessionID, ok := infSessionID.(string)
 	if !ok {
-		fmt.Println("fail on parse sessionID 2")
 		return nil, goauth.ErrInvalidInfomation
 	}
 
@@ -190,7 +188,6 @@ func (client *OwnerClient) ParseSession(meta map[string]interface{}) (goauth.ISe
 
 	infState, ok := meta["State"]
 	if !ok {
-		fmt.Println("fail on parse state")
 		return nil, goauth.ErrInvalidInfomation
 	}
 
@@ -218,13 +215,11 @@ func (client *OwnerClient) ParseSession(meta map[string]interface{}) (goauth.ISe
 
 	infAddress, ok := meta["Address"]
 	if !ok {
-		fmt.Println("fail on parse address")
 		return nil, goauth.ErrInvalidInfomation
 	}
 
 	address, ok := infAddress.(string)
 	if !ok {
-		fmt.Println("fail on parse address 2")
 		return nil, goauth.ErrInvalidInfomation
 	}
 
@@ -232,13 +227,11 @@ func (client *OwnerClient) ParseSession(meta map[string]interface{}) (goauth.ISe
 
 	infVerifyMessage, ok := meta["VerifyMessage"]
 	if !ok {
-		fmt.Println("fail on parse verify message")
 		return nil, goauth.ErrInvalidInfomation
 	}
 
 	verifyMessage, ok := infVerifyMessage.(string)
 	if !ok {
-		fmt.Println("fail on parse verifymessage 2")
 		return nil, goauth.ErrInvalidInfomation
 	}
 
