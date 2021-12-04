@@ -60,6 +60,8 @@ func (client *OwnerClient) VerifyMessageSignature(message []byte, signature []by
 
 	if signature[64] != 27 && signature[64] != 28 {
 
+		fmt.Println("version:", signature[64])
+
 		return false, goauth.ErrInvalidSignature
 	}
 	signature[64] -= 27
@@ -71,6 +73,8 @@ func (client *OwnerClient) VerifyMessageSignature(message []byte, signature []by
 		return false, err
 	}
 	recoveredAddr := crypto.PubkeyToAddress(*pubKey).Hex()
+
+	fmt.Println("address:", client.address, recoveredAddr)
 
 	return client.address == recoveredAddr, nil
 }
@@ -117,7 +121,7 @@ func (client *OwnerClient) BeginSession(clientID goauth.AccountID, adapter goaut
 	session := NewSession(sessionID, string(clientID))
 
 	verifyMessage, err := client.GetSignature([]byte(sessionID))
-
+	fmt.Println("version1:", verifyMessage[64])
 	if err != nil {
 		return nil, err
 	}
