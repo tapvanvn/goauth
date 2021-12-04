@@ -51,7 +51,12 @@ type OwnerClient struct {
 
 func (client *OwnerClient) GetSignature(message []byte) ([]byte, error) {
 
-	return crypto.Sign(crypto.Keccak256(message), client.privateKey)
+	signature, err := crypto.Sign(crypto.Keccak256(message), client.privateKey)
+	if err != nil {
+		return nil, err
+	}
+	signature[64] += 27 //So weir
+	return signature, nil
 }
 
 func (client *OwnerClient) VerifyMessageSignature(message []byte, signature []byte) (bool, error) {
