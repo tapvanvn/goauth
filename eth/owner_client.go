@@ -84,14 +84,14 @@ func (client *OwnerClient) VerifyMessageSignature(message []byte, signature []by
 	return client.address == recoveredAddr, nil
 }
 
-func (client *OwnerClient) VerifySignature(address string, verifyMessage string, verifySignature []byte) (bool, error) {
+func (client *OwnerClient) VerifySignature(address string, title string, verifyMessage string, verifySignature []byte) (bool, error) {
 
 	fromAddr := common.HexToAddress(address)
 
 	doc := NewTypedDocument()
 	doc.Parameters = append(doc.Parameters, &TypedParameter{
 		Type:  "string",
-		Name:  "Message",
+		Name:  title,
 		Value: verifyMessage,
 	})
 
@@ -126,7 +126,7 @@ func (client *OwnerClient) BeginSession(clientID goauth.AccountID, adapter goaut
 	session := NewSession(sessionID, string(clientID))
 
 	verifyMessage, err := client.GetSignature([]byte(sessionID))
-	fmt.Println("version1:", verifyMessage[64])
+
 	if err != nil {
 		return nil, err
 	}
@@ -139,34 +139,47 @@ func (client *OwnerClient) Verify(session goauth.ISession, response goauth.IResp
 
 	ethSession := session.(*EthSession)
 	ethResponse := response.(*Response)
-	fmt.Println("step 0")
+
 	if ethSession == nil || ethResponse == nil {
 
 		return false, goauth.ErrInvalidInfomation
 	}
-	fmt.Println("step 1")
+
 	message := []byte(ethSession.SessionID)
 
 	signature, err := hexutil.Decode(ethSession.VerifyMessage)
 	if err != nil {
 		return false, err
 	}
-	fmt.Println("step 2")
+
 	success, err := client.VerifyMessageSignature(message, signature)
 
 	if !success || err != nil {
 
 		return false, err
 	}
-	fmt.Println("step 3")
+
 	verifySignature, err := hexutil.Decode(ethResponse.Signature)
-	fmt.Println("step 3")
-	return client.VerifySignature(ethSession.Address, ethSession.VerifyMessage, verifySignature)
+
+	if len(verifySignature) < 64 {
+		return false, goauth.ErrInvalidSignature
+	}
+	return client.VerifySignature(ethSession.Address, ethResponse.MessageTitle, ethSession.VerifyMessage, verifySignature)
 }
 
 func (client *OwnerClient) ParseResponse(meta map[string]interface{}) (goauth.IResponse, error) {
 
 	res := &Response{}
+	infTitle, ok := meta["MessageTitle"]
+	if !ok {
+		return nil, goauth.ErrInvalidInfomation
+	}
+	title, ok := infTitle.(string)
+	if !ok {
+		return nil, goauth.ErrInvalidInfomation
+	}
+	res.MessageTitle = title
+
 	infSignature, ok := meta["Signature"]
 	if !ok {
 		return nil, goauth.ErrInvalidInfomation

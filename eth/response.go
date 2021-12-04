@@ -1,5 +1,6 @@
 package eth
 
 type Response struct {
-	Signature string `json:"Signature"`
+	MessageTitle string `json:"MessageTitle"` //the title use in typed sign
+	Signature    string `json:"Signature"`
 }
