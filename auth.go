@@ -47,6 +47,7 @@ func (auth *Auth) VerifySession(clientType ClientType, sessionMeta map[string]in
 		fmt.Println(" auth VerifySession 3")
 		session, err := client.ParseSession(sessionMeta)
 		if err != nil {
+			fmt.Println(" auth VerifySession 3", err)
 			return false, err
 		}
 		fmt.Println(" auth VerifySession 4")
