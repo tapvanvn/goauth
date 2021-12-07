@@ -11,6 +11,7 @@ import (
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/tapvanvn/goauth"
+	"github.com/tapvanvn/goutil"
 )
 
 func NewOwnerClient(privateKeyShadow string) (*OwnerClient, error) {
@@ -47,6 +48,11 @@ type OwnerClient struct {
 	address    string
 	privateKey *ecdsa.PrivateKey
 	publicKey  *ecdsa.PublicKey
+}
+
+func (client *OwnerClient) GetEtherJSSignature(message []byte) ([]byte, error) {
+
+	return goutil.EthersJSSignMessage(message, client.privateKey)
 }
 
 func (client *OwnerClient) GetSignature(message []byte) ([]byte, error) {

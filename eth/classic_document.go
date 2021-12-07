@@ -4,16 +4,22 @@ import (
 	solsha3 "github.com/miguelmota/go-solidity-sha3"
 )
 
-type ClassParameter struct {
+func NewClassicDocument() *ClassicDocument {
+	return &ClassicDocument{
+		Parameters: make([]*ClassicParameter, 0),
+	}
+}
+
+type ClassicParameter struct {
 	Type  string
 	Value interface{}
 }
 
-type ClassDocument struct {
-	Parameters []*ClassParameter
+type ClassicDocument struct {
+	Parameters []*ClassicParameter
 }
 
-func (doc *ClassDocument) GetHash() []byte {
+func (doc *ClassicDocument) GetHash() []byte {
 
 	heads := []string{}
 	values := []interface{}{}
@@ -23,4 +29,9 @@ func (doc *ClassDocument) GetHash() []byte {
 	}
 
 	return solsha3.SoliditySHA3(heads, values)
+}
+
+func (doc *ClassicDocument) Append(params ...*ClassicParameter) {
+
+	doc.Parameters = append(doc.Parameters, params...)
 }
