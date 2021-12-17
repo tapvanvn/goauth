@@ -228,7 +228,7 @@ func (client *OwnerClient) ParseResponse(meta map[string]interface{}) (goauth.IR
 	}
 	res.Signature = signature
 
-	if infVerifyMessage, ok := meta["Signature"]; ok {
+	if infVerifyMessage, ok := meta["VerifyMessage"]; ok {
 
 		verifyMessage, ok := infVerifyMessage.(string)
 		if !ok {
