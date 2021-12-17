@@ -120,6 +120,7 @@ func (client *OwnerClient) VerifySignature(address string, title string, verifyM
 	return fromAddr.Hex() == recoveredAddr, nil
 }
 
+//MARK: implement IAuthClient
 func (client *OwnerClient) GetClientType() goauth.ClientType {
 
 	return goauth.ClientTypeEthereum
@@ -141,6 +142,37 @@ func (client *OwnerClient) BeginSession(clientID goauth.AccountID, adapter goaut
 
 	return session, nil
 }
+
+func (client *OwnerClient) VerifyAuthentication(clientID goauth.AccountID, response goauth.IResponse) (bool, error) {
+
+	ethResponse := response.(*Response)
+
+	message := []byte(ethResponse.VerifyMessage)
+
+	signature, err := hexutil.Decode(ethResponse.VerifyMessage)
+
+	if err != nil {
+
+		return false, err
+	}
+
+	success, err := client.VerifyMessageSignature(message, signature)
+
+	if !success || err != nil {
+
+		return false, err
+	}
+
+	verifySignature, err := hexutil.Decode(ethResponse.Signature)
+
+	if len(verifySignature) < 64 {
+
+		return false, goauth.ErrInvalidSignature
+	}
+
+	return client.VerifySignature(string(clientID), ethResponse.MessageTitle, ethResponse.VerifyMessage, verifySignature)
+}
+
 func (client *OwnerClient) Verify(session goauth.ISession, response goauth.IResponse, adapter goauth.IAdapter) (bool, error) {
 
 	ethSession := session.(*EthSession)
@@ -195,6 +227,16 @@ func (client *OwnerClient) ParseResponse(meta map[string]interface{}) (goauth.IR
 		return nil, goauth.ErrInvalidInfomation
 	}
 	res.Signature = signature
+
+	if infVerifyMessage, ok := meta["Signature"]; ok {
+
+		verifyMessage, ok := infVerifyMessage.(string)
+		if !ok {
+			return nil, goauth.ErrInvalidInfomation
+		}
+		res.VerifyMessage = verifyMessage
+	}
+
 	return res, nil
 }
 
