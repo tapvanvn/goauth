@@ -1,7 +1,5 @@
 package goauth
 
-import "fmt"
-
 func NewAuth(adapter IAdapter) *Auth {
 	return &Auth{
 		adapter: adapter,
@@ -35,24 +33,42 @@ func (auth *Auth) BeginSession(clientType ClientType, clientAccountID AccountID)
 	return nil, ErrClientNotFound
 }
 
-//when frontend process and send infomation for verifying account.
+//when frontend process and send infomation for verifying the session.
 func (auth *Auth) VerifySession(clientType ClientType, sessionMeta map[string]interface{}, responseMeta map[string]interface{}) (bool, error) {
-	fmt.Println(" auth VerifySession 1")
+
 	if client, ok := auth.clients[clientType]; ok {
+
 		response, err := client.ParseResponse(responseMeta)
-		fmt.Println(" auth VerifySession 2")
+
 		if err != nil {
 			return false, err
 		}
-		fmt.Println(" auth VerifySession 3")
+
 		session, err := client.ParseSession(sessionMeta)
 		if err != nil {
-			fmt.Println(" auth VerifySession 3", err)
+
 			return false, err
 		}
-		fmt.Println(" auth VerifySession 4")
+
 		return client.Verify(session, response, auth.adapter)
 	}
-	fmt.Println(" auth VerifySession 5")
+
+	return false, ErrClientNotFound
+}
+
+//when frontend process and send infomation for verifying the authentication of provider.
+func (auth *Auth) VerifyAuthentication(clientType ClientType, clientAccountID AccountID, responseMeta map[string]interface{}) (bool, error) {
+
+	if client, ok := auth.clients[clientType]; ok {
+
+		response, err := client.ParseResponse(responseMeta)
+
+		if err != nil {
+			return false, err
+		}
+
+		return client.VerifyAuthentication(clientAccountID, response)
+	}
+
 	return false, ErrClientNotFound
 }
