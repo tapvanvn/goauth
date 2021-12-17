@@ -147,24 +147,12 @@ func (client *OwnerClient) VerifyAuthentication(clientID goauth.AccountID, respo
 
 	ethResponse := response.(*Response)
 
-	message := []byte(ethResponse.VerifyMessage)
-
-	signature, err := hexutil.Decode(ethResponse.VerifyMessage)
+	verifySignature, err := hexutil.Decode(ethResponse.Signature)
 
 	if err != nil {
 
 		return false, err
 	}
-
-	success, err := client.VerifyMessageSignature(message, signature)
-
-	if !success || err != nil {
-
-		return false, err
-	}
-
-	verifySignature, err := hexutil.Decode(ethResponse.Signature)
-
 	if len(verifySignature) < 64 {
 
 		return false, goauth.ErrInvalidSignature
