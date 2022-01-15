@@ -66,7 +66,7 @@ func (client *Client) BeginSession(clientID goauth.AccountID, adapter goauth.IAd
 
 	aud := fmt.Sprintf("%s.%s", clientID, refreshToken)
 
-	claim := &jws.ClaimSet{Iss: key, Aud: aud, Exp: now + int64(client.tokenLifeTime.Seconds())}
+	claim := &jws.ClaimSet{Iss: "goauth", Aud: aud, Exp: now + int64(client.tokenLifeTime.Seconds())}
 	header := &jws.Header{Algorithm: "HS256", Typ: "JWT"}
 	jwt, err := jws.Encode(header, claim, client.privateKey)
 	if err != nil {
