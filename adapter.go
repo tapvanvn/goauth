@@ -1,5 +1,5 @@
 package goauth
 
 type IAdapter interface {
-	NewSessionID() SessionID //create
+	NewSessionID() SessionID //issue a new sessionID
 }

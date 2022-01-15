@@ -4,7 +4,6 @@ import (
 	"crypto/ecdsa"
 	"errors"
 	"fmt"
-	"strconv"
 	"strings"
 
 	"github.com/ethereum/go-ethereum/common"
@@ -243,33 +242,6 @@ func (client *OwnerClient) ParseSession(meta map[string]interface{}) (goauth.ISe
 	}
 
 	session.SessionID = goauth.SessionID(sessionID)
-
-	infState, ok := meta["State"]
-	if !ok {
-		return nil, goauth.ErrInvalidInfomation
-	}
-
-	state := 0
-	switch infState.(type) {
-	case string:
-		if test, err := strconv.ParseInt(infState.(string), 10, 64); err == nil {
-			state = int(test)
-		}
-	case float64:
-		if test, ok := infState.(float64); ok {
-			state = int(test)
-		}
-	case int:
-		if test, ok := infState.(int); ok {
-			state = int(test)
-		}
-	case int64:
-		if test, ok := infState.(int64); ok {
-			state = int(test)
-		}
-	}
-
-	session.State = goauth.SessionState(state)
 
 	infAddress, ok := meta["Address"]
 	if !ok {

@@ -8,7 +8,7 @@ Client adapt to system to provide an account manager machanism.
 
 ## Client may
 - Issue an unique id to each account.
-- Provide a method to authorize signing in process.
+- Provide a method to authorize the incoming user in login process.
 - Also may or may not provice a method for issueing and verifying the signature of account.
 - May be self managed type such as userpass or email/phone, or thirdparty such as google/apple/ethereum.
 

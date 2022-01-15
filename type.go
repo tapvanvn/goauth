@@ -1,7 +1,6 @@
 package goauth
 
 type ClientType string
-type SessionState int
 
 const (
 	ClientTypeGoogle   = ClientType("google")
@@ -10,6 +9,7 @@ const (
 	ClientTypeUserpass = ClientType("userpass")
 	ClientTypeEmail    = ClientType("email")
 	ClientTypePhone    = ClientType("phone")
+	ClientTypeJWT      = ClientType("jwt")
 )
 
 type AccountID string
@@ -18,7 +18,3 @@ type SessionID string
 type Document interface {
 	GetHash() []byte
 }
-
-const (
-	SessionStateInit = SessionState(0)
-)

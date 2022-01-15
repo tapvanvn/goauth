@@ -9,7 +9,13 @@ type IAuthClient interface {
 
 	Verify(session ISession, response IResponse, adapter IAdapter) (bool, error) //Verify if
 
-	ParseResponse(meta map[string]interface{}) (IResponse, error)
+	//parse meta to response struct
+	//ParseResponse(meta map[string]interface{}) (IResponse, error)
 
-	ParseSession(meta map[string]interface{}) (ISession, error)
+	//parse meta to session struct
+	//ParseSession(meta map[string]interface{}) (ISession, error)
+
+	//For the auth method that provice a renew machanism
+	//If the auth method not support renew session, it should return not implement error
+	RenewSession(refreshToken string) (ISession, error)
 }

@@ -36,3 +36,8 @@ func (doc *TypedDocument) GetHash() []byte {
 	return crypto.Keccak256(crypto.Keccak256([]byte(head)), crypto.Keccak256([]byte(value)))
 
 }
+
+func (doc *TypedDocument) Append(params ...*TypedParameter) {
+
+	doc.Parameters = append(doc.Parameters, params...)
+}

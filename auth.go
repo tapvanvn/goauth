@@ -34,21 +34,9 @@ func (auth *Auth) BeginSession(clientType ClientType, clientAccountID AccountID)
 }
 
 //when frontend process and send infomation for verifying the session.
-func (auth *Auth) VerifySession(clientType ClientType, sessionMeta map[string]interface{}, responseMeta map[string]interface{}) (bool, error) {
+func (auth *Auth) VerifySession(clientType ClientType, session ISession, response IResponse) (bool, error) {
 
 	if client, ok := auth.clients[clientType]; ok {
-
-		response, err := client.ParseResponse(responseMeta)
-
-		if err != nil {
-			return false, err
-		}
-
-		session, err := client.ParseSession(sessionMeta)
-		if err != nil {
-
-			return false, err
-		}
 
 		return client.Verify(session, response, auth.adapter)
 	}
@@ -57,15 +45,9 @@ func (auth *Auth) VerifySession(clientType ClientType, sessionMeta map[string]in
 }
 
 //when frontend process and send infomation for verifying the authentication of provider.
-func (auth *Auth) VerifyAuthentication(clientType ClientType, clientAccountID AccountID, responseMeta map[string]interface{}) (bool, error) {
+func (auth *Auth) VerifyAuthentication(clientType ClientType, clientAccountID AccountID, response IResponse) (bool, error) {
 
 	if client, ok := auth.clients[clientType]; ok {
-
-		response, err := client.ParseResponse(responseMeta)
-
-		if err != nil {
-			return false, err
-		}
 
 		return client.VerifyAuthentication(clientAccountID, response)
 	}
