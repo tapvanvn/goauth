@@ -76,13 +76,13 @@ func (client *Client) VerifyAuthentication(clientID goauth.AccountID, response g
 func (client *Client) Verify(session goauth.ISession, response goauth.IResponse, adapter goauth.IAdapter) (bool, error) {
 	jwt := string(session.GetSessionID())
 	if jwt == "" {
-		fmt.Println("adf")
+
 		return false, goauth.ErrInvalidInfomation
 	}
 
 	claim, err := jws.Decode(jwt)
 	if err != nil {
-		fmt.Println("ghi")
+
 		return false, goauth.ErrInvalidInfomation
 	}
 	if time.Now().Unix() > claim.Exp {
@@ -93,7 +93,7 @@ func (client *Client) Verify(session goauth.ISession, response goauth.IResponse,
 	parts := strings.Split(claim.Aud, ".")
 	numParts := len(parts)
 	if numParts < 2 {
-		fmt.Println("def")
+
 		return false, goauth.ErrInvalidInfomation
 	}
 	refreshToken := parts[numParts-1]
@@ -103,7 +103,7 @@ func (client *Client) Verify(session goauth.ISession, response goauth.IResponse,
 	jwtIdentifier, err := memPool.Get(key)
 
 	if err != nil || jwtIdentifier != strings.Join(parts, ".") {
-		fmt.Println("abc", jwtIdentifier)
+
 		return false, goauth.ErrInvalidInfomation
 	}
 	return true, nil
@@ -121,5 +121,14 @@ func (client *Client) RenewSession(refreshToken string) (goauth.ISession, error)
 
 		return nil, goauth.ErrInvalidInfomation
 	}
-	return client.BeginSession(goauth.AccountID(jwtIdentifier), nil)
+	aud := fmt.Sprintf("%s.%s", jwtIdentifier, refreshToken)
+
+	claim := &jws.ClaimSet{Iss: key, Aud: aud, Exp: time.Now().Unix() + int64(client.tokenLifeTime.Seconds())}
+	header := &jws.Header{Algorithm: "HS256", Typ: "JWT"}
+	jwt, err := jws.Encode(header, claim, client.privateKey)
+	if err != nil {
+		return nil, err
+	}
+	return NewSession(goauth.SessionID(jwt), string(jwtIdentifier)), nil
+
 }
