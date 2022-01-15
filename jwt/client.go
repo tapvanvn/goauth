@@ -45,20 +45,28 @@ func (client *Client) GetClientType() goauth.ClientType {
 func (client *Client) GetKey(refreshToken string) string {
 	return fmt.Sprintf("%s%s", client.prefix, refreshToken)
 }
+func (client *Client) GetExpireKey(refreshToken string) string {
+	return fmt.Sprintf("%s%s_exp", client.prefix, refreshToken)
+}
 
 //frontend request to begin a signin process.
 func (client *Client) BeginSession(clientID goauth.AccountID, adapter goauth.IAdapter) (goauth.ISession, error) {
+	now := time.Now().Unix()
+	refreshTokenExpire := now + int64(client.refreshLifeTime.Seconds())
 
 	memPool := client.dbEngine.GetMemPool()
+
 	refreshToken := goutil.GenSecretKey(32)
 
 	key := client.GetKey(refreshToken)
-	//fmt.Println("key:", key, " clientID:", string(clientID))
+	expKey := client.GetExpireKey(refreshToken)
+
 	memPool.SetExpire(key, string(clientID), client.refreshLifeTime)
+	memPool.SetIntExpire(expKey, refreshTokenExpire, client.refreshLifeTime)
 
 	aud := fmt.Sprintf("%s.%s", clientID, refreshToken)
 
-	claim := &jws.ClaimSet{Iss: key, Aud: aud, Exp: time.Now().Unix() + int64(client.tokenLifeTime.Seconds())}
+	claim := &jws.ClaimSet{Iss: key, Aud: aud, Exp: now + int64(client.tokenLifeTime.Seconds())}
 	header := &jws.Header{Algorithm: "HS256", Typ: "JWT"}
 	jwt, err := jws.Encode(header, claim, client.privateKey)
 	if err != nil {
@@ -112,15 +120,25 @@ func (client *Client) Verify(session goauth.ISession, response goauth.IResponse,
 func (client *Client) RenewSession(refreshToken string) (goauth.ISession, error) {
 
 	key := client.GetKey(refreshToken)
+	expKey := client.GetExpireKey(refreshToken)
 
 	memPool := client.dbEngine.GetMemPool()
 
 	jwtIdentifier, err := memPool.Get(key)
 
-	if err != nil || jwtIdentifier == "" {
+	exp, err2 := memPool.GetInt(expKey)
+
+	if err != nil || jwtIdentifier == "" || err2 != nil {
 
 		return nil, goauth.ErrInvalidInfomation
 	}
+	now := time.Now().Unix()
+
+	if exp > now && exp-now < int64(client.tokenLifeTime.Seconds()) {
+
+		return client.BeginSession(goauth.AccountID(jwtIdentifier), nil)
+	}
+
 	aud := fmt.Sprintf("%s.%s", jwtIdentifier, refreshToken)
 
 	claim := &jws.ClaimSet{Iss: key, Aud: aud, Exp: time.Now().Unix() + int64(client.tokenLifeTime.Seconds())}
