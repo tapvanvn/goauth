@@ -48,6 +48,7 @@ func (client *Client) GetKey(refreshToken string) string {
 
 //frontend request to begin a signin process.
 func (client *Client) BeginSession(clientID goauth.AccountID, adapter goauth.IAdapter) (goauth.ISession, error) {
+
 	now := time.Now().Unix()
 
 	memPool := client.dbEngine.GetMemPool()
