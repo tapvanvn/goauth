@@ -81,13 +81,13 @@ func (client *Client) Verify(session goauth.ISession, response goauth.IResponse,
 	jwt := string(session.GetSessionID())
 	if jwt == "" {
 
-		return false, goauth.ErrInvalidInfomation
+		return false, goauth.ErrInvalidInformation
 	}
 
 	claim, err := jws.Decode(jwt)
 	if err != nil {
 
-		return false, goauth.ErrInvalidInfomation
+		return false, goauth.ErrInvalidInformation
 	}
 	if time.Now().Unix() > claim.Exp {
 
@@ -98,7 +98,7 @@ func (client *Client) Verify(session goauth.ISession, response goauth.IResponse,
 	numParts := len(parts)
 	if numParts < 2 {
 
-		return false, goauth.ErrInvalidInfomation
+		return false, goauth.ErrInvalidInformation
 	}
 	refreshToken := parts[numParts-1]
 	key := client.GetKey(refreshToken)
@@ -108,7 +108,7 @@ func (client *Client) Verify(session goauth.ISession, response goauth.IResponse,
 
 	if err != nil || jwtIdentifier != strings.Join(parts, ".") {
 
-		return false, goauth.ErrInvalidInfomation
+		return false, goauth.ErrInvalidInformation
 	}
 	return true, nil
 }
@@ -123,14 +123,14 @@ func (client *Client) RenewSession(refreshToken string) (goauth.ISession, error)
 
 	if err != nil || jwtIdentifier == "" {
 
-		return nil, goauth.ErrInvalidInfomation
+		return nil, goauth.ErrInvalidInformation
 	}
 
 	err = memPool.Del(key)
 
 	if err != nil {
 
-		return nil, goauth.ErrInvalidInfomation
+		return nil, goauth.ErrInvalidInformation
 	}
 
 	return client.BeginSession(goauth.AccountID(jwtIdentifier), nil)

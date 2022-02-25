@@ -167,13 +167,15 @@ func (client *OwnerClient) Verify(session goauth.ISession, response goauth.IResp
 
 	if ethSession == nil || ethResponse == nil {
 
-		return false, goauth.ErrInvalidInfomation
+		return false, goauth.ErrInvalidInformation
 	}
 
 	message := []byte(ethSession.SessionID)
 
 	signature, err := hexutil.Decode(ethSession.VerifyMessage)
+
 	if err != nil {
+
 		return false, err
 	}
 
@@ -197,21 +199,21 @@ func (client *OwnerClient) ParseResponse(meta map[string]interface{}) (goauth.IR
 	res := &Response{}
 	infTitle, ok := meta["MessageTitle"]
 	if !ok {
-		return nil, goauth.ErrInvalidInfomation
+		return nil, goauth.ErrInvalidInformation
 	}
 	title, ok := infTitle.(string)
 	if !ok {
-		return nil, goauth.ErrInvalidInfomation
+		return nil, goauth.ErrInvalidInformation
 	}
 	res.MessageTitle = title
 
 	infSignature, ok := meta["Signature"]
 	if !ok {
-		return nil, goauth.ErrInvalidInfomation
+		return nil, goauth.ErrInvalidInformation
 	}
 	signature, ok := infSignature.(string)
 	if !ok {
-		return nil, goauth.ErrInvalidInfomation
+		return nil, goauth.ErrInvalidInformation
 	}
 	res.Signature = signature
 
@@ -219,7 +221,7 @@ func (client *OwnerClient) ParseResponse(meta map[string]interface{}) (goauth.IR
 
 		verifyMessage, ok := infVerifyMessage.(string)
 		if !ok {
-			return nil, goauth.ErrInvalidInfomation
+			return nil, goauth.ErrInvalidInformation
 		}
 		res.VerifyMessage = verifyMessage
 	}
@@ -233,36 +235,36 @@ func (client *OwnerClient) ParseSession(meta map[string]interface{}) (goauth.ISe
 
 	infSessionID, ok := meta["SessionID"]
 	if !ok {
-		return nil, goauth.ErrInvalidInfomation
+		return nil, goauth.ErrInvalidInformation
 	}
 
 	sessionID, ok := infSessionID.(string)
 	if !ok {
-		return nil, goauth.ErrInvalidInfomation
+		return nil, goauth.ErrInvalidInformation
 	}
 
 	session.SessionID = goauth.SessionID(sessionID)
 
 	infAddress, ok := meta["Address"]
 	if !ok {
-		return nil, goauth.ErrInvalidInfomation
+		return nil, goauth.ErrInvalidInformation
 	}
 
 	address, ok := infAddress.(string)
 	if !ok {
-		return nil, goauth.ErrInvalidInfomation
+		return nil, goauth.ErrInvalidInformation
 	}
 
 	session.Address = address
 
 	infVerifyMessage, ok := meta["VerifyMessage"]
 	if !ok {
-		return nil, goauth.ErrInvalidInfomation
+		return nil, goauth.ErrInvalidInformation
 	}
 
 	verifyMessage, ok := infVerifyMessage.(string)
 	if !ok {
-		return nil, goauth.ErrInvalidInfomation
+		return nil, goauth.ErrInvalidInformation
 	}
 
 	session.VerifyMessage = verifyMessage

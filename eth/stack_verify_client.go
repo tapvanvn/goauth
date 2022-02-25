@@ -39,6 +39,7 @@ func (client *StackVerifyClient) VerifySignature(doc goauth.Document, signature 
 		return false, goauth.ErrAccountNotFound
 	}
 	signatureBytes, err := hexutil.Decode(parts[1])
+
 	if err != nil {
 		return false, goauth.ErrInvalidSignature
 	}
