@@ -134,5 +134,4 @@ func (client *Client) RenewSession(refreshToken string) (goauth.ISession, error)
 	}
 
 	return client.BeginSession(goauth.AccountID(jwtIdentifier), nil)
-
 }

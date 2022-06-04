@@ -271,3 +271,8 @@ func (client *OwnerClient) ParseSession(meta map[string]interface{}) (goauth.ISe
 
 	return session, nil
 }
+
+//renew the session
+func (client *OwnerClient) RenewSession(refreshToken string) (goauth.ISession, error) {
+	return nil, goauth.ErrNotImplement
+}
