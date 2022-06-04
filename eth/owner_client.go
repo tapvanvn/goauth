@@ -194,7 +194,12 @@ func (client *OwnerClient) Verify(session goauth.ISession, response goauth.IResp
 	return client.VerifySignature(ethSession.Address, ethResponse.MessageTitle, ethSession.VerifyMessage, verifySignature)
 }
 
-func (client *OwnerClient) ParseResponse(meta map[string]interface{}) (goauth.IResponse, error) {
+//renew the session
+func (client *OwnerClient) RenewSession(refreshToken string) (goauth.ISession, error) {
+	return nil, goauth.ErrNotImplement
+}
+
+func ParseDefaultResponse(meta map[string]interface{}) (goauth.IResponse, error) {
 
 	res := &Response{}
 	infTitle, ok := meta["MessageTitle"]
@@ -229,7 +234,7 @@ func (client *OwnerClient) ParseResponse(meta map[string]interface{}) (goauth.IR
 	return res, nil
 }
 
-func (client *OwnerClient) ParseSession(meta map[string]interface{}) (goauth.ISession, error) {
+func ParseDefaultSession(meta map[string]interface{}) (goauth.ISession, error) {
 
 	session := &EthSession{}
 
@@ -270,9 +275,4 @@ func (client *OwnerClient) ParseSession(meta map[string]interface{}) (goauth.ISe
 	session.VerifyMessage = verifyMessage
 
 	return session, nil
-}
-
-//renew the session
-func (client *OwnerClient) RenewSession(refreshToken string) (goauth.ISession, error) {
-	return nil, goauth.ErrNotImplement
 }
