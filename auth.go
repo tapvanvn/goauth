@@ -45,11 +45,11 @@ func (auth *Auth) VerifySession(clientType ClientType, session ISession, respons
 }
 
 //when frontend process and send infomation for verifying the authentication of provider.
-func (auth *Auth) VerifyAuthentication(clientType ClientType, clientAccountID AccountID, response IResponse) (bool, error) {
+func (auth *Auth) Authenticate(clientType ClientType, clientAccountID AccountID, response IResponse) (bool, error) {
 
 	if client, ok := auth.clients[clientType]; ok {
 
-		return client.VerifyAuthentication(clientAccountID, response)
+		return client.Authenticate(clientAccountID, response)
 	}
 
 	return false, ErrClientNotFound

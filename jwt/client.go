@@ -71,7 +71,7 @@ func (client *Client) BeginSession(clientID goauth.AccountID, adapter goauth.IAd
 }
 
 //the verify authentication for jwt is not nessasary.
-func (client *Client) VerifyAuthentication(clientID goauth.AccountID, response goauth.IResponse) (bool, error) {
+func (client *Client) Authenticate(clientID goauth.AccountID, response goauth.IResponse) (bool, error) {
 	return false, goauth.ErrNotImplement
 }
 

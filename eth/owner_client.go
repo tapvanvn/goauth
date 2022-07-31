@@ -142,7 +142,7 @@ func (client *OwnerClient) BeginSession(clientID goauth.AccountID, adapter goaut
 	return session, nil
 }
 
-func (client *OwnerClient) VerifyAuthentication(clientID goauth.AccountID, response goauth.IResponse) (bool, error) {
+func (client *OwnerClient) Authenticate(clientID goauth.AccountID, response goauth.IResponse) (bool, error) {
 
 	ethResponse := response.(*Response)
 

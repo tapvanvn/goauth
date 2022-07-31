@@ -3,6 +3,7 @@ package goauth
 type ClientType string
 
 const (
+	ClientTypeUnknown             = ClientType("unknown")
 	ClientTypeGoogle              = ClientType("google")
 	ClientTypeApple               = ClientType("apple")
 	ClientTypeEthereum            = ClientType("eth")
@@ -12,6 +13,7 @@ const (
 	ClientTypeEmail               = ClientType("email")
 	ClientTypePhone               = ClientType("phone")
 	ClientTypeJWT                 = ClientType("jwt")
+	ClientTypeMomoMiniapp         = ClientType("momo_miniapp")
 )
 
 type AccountID string
