@@ -7,10 +7,15 @@ require (
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/google/uuid v1.1.5
 	github.com/miguelmota/go-solidity-sha3 v0.1.1
-	github.com/tapvanvn/godbengine v1.4.8-build.20
-	github.com/tapvanvn/gomomo v0.0.1-build.1
-	github.com/tapvanvn/goutil v0.0.18-build.6
+	github.com/tapvanvn/godbengine v1.4.9-build.35
+	github.com/tapvanvn/gomomo v0.0.1-build.2
+	github.com/tapvanvn/goutil v0.0.18-build.20
 	golang.org/x/oauth2 v0.0.0-20210218202405-ba52d332ba99
+)
+
+replace (
+	github.com/tapvanvn/goauth => ../goauth
+	github.com/tapvanvn/gomomo => ../../2022/gomomo
 )
 
 require (
@@ -29,7 +34,8 @@ require (
 	github.com/jstemmer/go-junit-report v0.9.1 // indirect
 	github.com/klauspost/compress v1.13.6 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
-	github.com/tapvanvn/gorouter/v2 v2.0.9-build.11 // indirect
+	github.com/tapvanvn/gocondition v1.0.0-alpha.1 // indirect
+	github.com/tapvanvn/gorouter/v2 v2.0.9-build.12 // indirect
 	github.com/xdg-go/pbkdf2 v1.0.0 // indirect
 	github.com/xdg-go/scram v1.0.2 // indirect
 	github.com/xdg-go/stringprep v1.0.2 // indirect

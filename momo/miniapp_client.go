@@ -1,6 +1,7 @@
 package momo
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/tapvanvn/goauth"
@@ -49,10 +50,11 @@ func (client *MiniappClient) Authenticate(clientID goauth.AccountID, response go
 
 		return false, goauth.ErrInvalidInformation
 	}
-	accessToken, err := client.momoClient.RequestAccessKey(appResponse.PartnerUserID, appResponse.AuthCode)
+	accessToken, err := client.momoClient.RequestAccessToken(appResponse.PartnerUserID, appResponse.AuthCode)
 	if err != nil {
 		return false, err
 	}
+	fmt.Println("momo access Token", accessToken.Token, "ex:", accessToken.ExpiredTime)
 	return accessToken.ExpiredTime > time.Now().Unix(), nil
 }
 func (client *MiniappClient) Verify(session goauth.ISession, response goauth.IResponse, adapter goauth.IAdapter) (bool, error) { //Verify session
