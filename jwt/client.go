@@ -58,7 +58,7 @@ func (client *Client) BeginSession(clientID goauth.AccountID, adapter goauth.IAd
 	key := client.GetKey(refreshToken)
 
 	memPool.SetExpire(key, string(clientID), client.refreshLifeTime)
-
+	fmt.Println("begin session", key, string(clientID), client.refreshLifeTime)
 	aud := fmt.Sprintf("%s.%s", clientID, refreshToken)
 
 	claim := &jws.ClaimSet{Iss: "goauth", Aud: aud, Exp: now + int64(client.tokenLifeTime.Seconds())}
@@ -80,13 +80,13 @@ func (client *Client) Verify(session goauth.ISession, response goauth.IResponse,
 
 	jwt := string(session.GetSessionID())
 	if jwt == "" {
-
+		fmt.Println("erorr here 1")
 		return false, goauth.ErrInvalidInformation
 	}
 
 	claim, err := jws.Decode(jwt)
 	if err != nil {
-
+		fmt.Println("erorr here 2")
 		return false, goauth.ErrInvalidInformation
 	}
 	if time.Now().Unix() > claim.Exp {
@@ -97,7 +97,7 @@ func (client *Client) Verify(session goauth.ISession, response goauth.IResponse,
 	parts := strings.Split(claim.Aud, ".")
 	numParts := len(parts)
 	if numParts < 2 {
-
+		fmt.Println("erorr here 3")
 		return false, goauth.ErrInvalidInformation
 	}
 	refreshToken := parts[numParts-1]
@@ -107,7 +107,7 @@ func (client *Client) Verify(session goauth.ISession, response goauth.IResponse,
 	jwtIdentifier, err := memPool.Get(key)
 
 	if err != nil || jwtIdentifier != strings.Join(parts, ".") {
-
+		fmt.Println("erorr here 4: ", jwtIdentifier, "key:", key)
 		return false, goauth.ErrInvalidInformation
 	}
 	return true, nil

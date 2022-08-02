@@ -1,5 +1,7 @@
 package momo
 
 type MiniAppAuthResponse struct {
-	AuthCode string `json:"AuthCode"`
+	MiniAppUserID string `json:"MiniAppUserID"`
+	PartnerUserID string `json:"PartnerUserID"`
+	AuthCode      string `json:"AuthCode"`
 }
