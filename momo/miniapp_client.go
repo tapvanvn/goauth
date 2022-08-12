@@ -19,9 +19,13 @@ func NewMiniappClient(momoAppID string, isDev bool, openSecret string, openPriva
 		OpenPrivateKey: openPrivateKey,
 		OpenPublicKey:  openPublicKey,
 	}
+	momoClient, err := miniapp.NewMiniAppClient(isDev, momoConfig)
+	if err != nil {
+		return nil, err
+	}
 	authClient := &MiniappClient{
 		AppID:      momoAppID,
-		momoClient: miniapp.NewMiniAppClient(isDev, momoConfig),
+		momoClient: momoClient,
 	}
 
 	return authClient, nil
