@@ -8,15 +8,14 @@ require (
 	github.com/google/uuid v1.2.0
 	github.com/miguelmota/go-solidity-sha3 v0.1.1
 	github.com/tapvanvn/godbengine v1.4.9-build.35
-	github.com/tapvanvn/gomomo v0.0.1-build.2
+	github.com/tapvanvn/gomomo v0.0.1-build.3
 	github.com/tapvanvn/goutil v0.0.18-build.20
 	golang.org/x/oauth2 v0.0.0-20210218202405-ba52d332ba99
 )
 
-replace (
-	github.com/tapvanvn/goauth => ../goauth
-	github.com/tapvanvn/gomomo => ../../2022/gomomo
-)
+// replace (
+// 	github.com/tapvanvn/gomomo => ../../2022/gomomo
+// )
 
 require (
 	cloud.google.com/go v0.75.0 // indirect
