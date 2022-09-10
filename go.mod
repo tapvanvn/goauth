@@ -9,7 +9,7 @@ require (
 	github.com/miguelmota/go-solidity-sha3 v0.1.1
 	github.com/tapvanvn/godbengine v1.4.9-build.35
 	github.com/tapvanvn/gomomo v0.0.1-build.3
-	github.com/tapvanvn/goutil v0.0.18-build.20
+	github.com/tapvanvn/goutil v0.0.18-build.21
 	golang.org/x/oauth2 v0.0.0-20210218202405-ba52d332ba99
 )
 

@@ -469,6 +469,8 @@ github.com/tapvanvn/goutil v0.0.18-build.6 h1:bGhfrEfQi/ZNHEmJqPvE2FQIpS+HCv6rUY
 github.com/tapvanvn/goutil v0.0.18-build.6/go.mod h1:TQCs3ccLsdLDL/2U5oWOqLVNaIZSyOa4zj7UHnoG+f4=
 github.com/tapvanvn/goutil v0.0.18-build.20 h1:mWWwKnaPOYyNKMgX7fM1QmNlj3P0sVXiWbmP1F3q9xE=
 github.com/tapvanvn/goutil v0.0.18-build.20/go.mod h1:TQCs3ccLsdLDL/2U5oWOqLVNaIZSyOa4zj7UHnoG+f4=
+github.com/tapvanvn/goutil v0.0.18-build.21 h1:jj3/j+UTUeBI0j8HfSkJKDA8VLHb3He5G8vyHrwtK0Y=
+github.com/tapvanvn/goutil v0.0.18-build.21/go.mod h1:TQCs3ccLsdLDL/2U5oWOqLVNaIZSyOa4zj7UHnoG+f4=
 github.com/tidwall/pretty v1.0.0/go.mod h1:XNkn88O1ChpSDQmQeStsy+sBenx6DDtFZJxhVysOjyk=
 github.com/tinylib/msgp v1.0.2/go.mod h1:+d+yLhGm8mzTaHzB+wgMYrodPfmZrzkirds8fDWklFE=
 github.com/tklauser/go-sysconf v0.3.5/go.mod h1:MkWzOF4RMCshBAMXuhXJs64Rte09mITnppBXY/rYEFI=
